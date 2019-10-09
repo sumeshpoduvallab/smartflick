@@ -61,12 +61,12 @@ class Recommender:
             movie_dict['Movie'] = self.getData('title', movieIndex[0])
             movie_dict['Genres'] = self.getData('genres', movieIndex[0])
             movie_dict['Director'] = self.getData('director', movieIndex[0])
-            movie_dict['Popularity'] = self.getData('popularity', movieIndex[0])
+            movie_dict['Vote'] = self.getData('vote_average', movieIndex[0])
 
             movie_list.append(movie_dict)
             i=i+1
             if i > self.__maxResults:
                 break
 
-        result_dataframe = pd.DataFrame(movie_list, columns=['Movie','Genres','Director','Popularity'])
+        result_dataframe = pd.DataFrame(movie_list, columns=['Movie','Genres','Director','Vote'])
         return result_dataframe
