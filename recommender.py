@@ -1,4 +1,5 @@
 import pandas as pd
+from tabulate import tabulate
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -47,6 +48,38 @@ class Recommender:
     def getData(self, columnName, index):
         return self.__dataFrame[self.__dataFrame.index == index][columnName].values[0]
 
+    def printDataSet(self):
+        dataFrame = pd.DataFrame(self.__dataFrame, columns=['title','genres','director','vote_average'])
+        totalRows = dataFrame.shape[0]
+        startPos = 1
+        endPos = startPos + 100
+
+        while True:
+            # Print movie list along with features
+            paginatedDataFrame = dataFrame[startPos:endPos]
+            print(tabulate(paginatedDataFrame, headers='keys', tablefmt='psql'))
+
+            if endPos == totalRows:
+                break
+            print("")
+            print("")
+            print("---------------------------------------------------------------------------")
+            next = input("Next (y|n): ")
+            print("---------------------------------------------------------------------------")
+            next = str(next).lower()
+            if next == "y":
+                startPos = startPos + 100
+                endPos = startPos + 100
+
+                if totalRows < endPos:
+                    endPos = totalRows
+                continue
+            elif next == "n":
+                break
+            else:
+                print("Invalid option: Please try again and enter a valid option")
+                continue
+
     def search(self, movieUserLikes="Avatar"):
         movieIndex = self.getTitleIndex(movieUserLikes)
         similarMovies = list(enumerate(self.__similarity[movieIndex]))
@@ -54,9 +87,14 @@ class Recommender:
         # Get a list of similar movies in descending order of similarity score
         sortedSimilarMoviesIndex = sorted(similarMovies,key=lambda x:x[1],reverse=True)
 
+        # Add recommended movies to a data frame
         movie_list = []
         i=0
         for movieIndex in sortedSimilarMoviesIndex:
+            # Skip the first movie, since it will be the movie user liked recently
+            if i==0:
+                i=i+1
+                continue
             movie_dict = {}
             movie_dict['Movie'] = self.getData('title', movieIndex[0])
             movie_dict['Genres'] = self.getData('genres', movieIndex[0])
@@ -65,7 +103,7 @@ class Recommender:
 
             movie_list.append(movie_dict)
             i=i+1
-            if i > self.__maxResults:
+            if i > (self.__maxResults + 1):
                 break
 
         result_dataframe = pd.DataFrame(movie_list, columns=['Movie','Genres','Director','Vote'])
