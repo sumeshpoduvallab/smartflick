@@ -10,9 +10,8 @@ Popular streaming service like Netflix estimate the likelihood that you will wat
 SmartFlick should recommend movies to viewer based on their past likings. SmartFlick will find similar movies to a given movie and then recommend those similar movies to the viewer.
 
 ## Requirements
-* SmartFlick will collect list of movies viewer liked recently.
-* SmartFlick will recommend movies similar to viewers previous likings.
-* [Nice to do] SmartFlick will recommend movies from all genres (equally distributed).
+* SmartFlick will retrieve movie, viewer liked recently.
+* SmartFlick will recommend movies similar to viewers recent likings.
 
 ## Design Theory
 
